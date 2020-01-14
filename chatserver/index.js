@@ -1,4 +1,13 @@
 var io = require('socket.io')(9000);
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+ host : 'localhost',
+ user : 'homestead',
+ password : 'secret',
+ database : 'homestead'
+});
+  
+
 // Chatroom
 
 var numUsers = 0;
@@ -12,7 +21,19 @@ console.log("connection..")
     socket.broadcast.emit('new message', {
       username: socket.username,
       message: data
+
     });
+
+    connection.connect();
+  
+    connection.query('INSERT INTO messages SET ?', 'new message',  function (error, results, fields) {
+      if (error) throw error;
+      console.log('new message');
+  
+  
+});
+  
+
   });
 
   // when the client emits 'add user', this listens and executes
